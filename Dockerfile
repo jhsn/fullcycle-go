@@ -1,16 +1,11 @@
-FROM golang:1.15-alpine AS builder
-
-RUN mkdir /app
-
-ADD . /app
+FROM golang:1.17-alpine AS build
 
 WORKDIR /app
-
-RUN go build -o /app/DckGo .
+COPY . .
+RUN go build -o main hello.go
 
 FROM scratch
-
 WORKDIR /app
-COPY --from=builder /app/DckGo ./DckGo
+COPY --from=build /app/main .
 
-ENTRYPOINT [ "./DckGo" ]
+CMD ["/app/main"]
